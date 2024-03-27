@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { WEATHER_API_KEY, WEATHER_API_URL } from '../api';
 
 const Search = () => {
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setterm] = useState(null);
+    const [currentWeather, setCurrentWeather] = useState(null);
+    const [forecast, setForecast] = useState(null);
 
     const fetchCities = async (searchTerm) => {
         try {
@@ -26,6 +29,25 @@ const Search = () => {
         setSelectedCity(city);
         setSuggestions([]);
         setterm(city.name);
+    };
+
+    const handleOnSearchChange = async () => {
+        try {
+            const response = await axios({
+                method: 'GET',
+                url: `${WEATHER_API_URL}/weather?q=${selectedCity.name}&appid=${WEATHER_API_KEY}&units=metric`,
+            });
+            setCurrentWeather(response.data);
+
+            const forecastResponse = await axios({
+                method: 'GET',
+                url: `${WEATHER_API_URL}/forecast?q=${selectedCity.name}&appid=${WEATHER_API_KEY}&units=metric`,
+            });
+            setForecast(forecastResponse.data);
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error fetching weather:', error);
+        }
     };
 
     return (
@@ -50,18 +72,21 @@ const Search = () => {
                             setterm(e.target.value);
                         }}
                     />
-                    <ul className="text-white">
+                    <ul className="text-gray-100 border rounded-md border-gray-500 mt-2 bg-gray-500 divide-y divide-gray-900">
                         {suggestions.map((city) => (
                             <li
                                 key={city.id}
-                                className="cursor-pointer hover:bg-gray-700"
+                                className="cursor-pointer hover:bg-gray-700 p-3"
                                 onClick={() => handleSelectCity(city)}
                             >
                                 {city.name}
                             </li>
                         ))}
                     </ul>
-                    <button className="w-72 h-12 bg-blue-light text-white font-nunito text-text-md mt-4 rounded-lg">
+                    <button
+                        className="w-72 h-12 bg-blue-light text-white font-nunito text-text-md mt-4 rounded-lg"
+                        onClick={handleOnSearchChange}
+                    >
                         Search
                     </button>
                 </div>
