@@ -2,7 +2,11 @@
 export default {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
-        extend: {},
+        extend: {
+            backgroundImage: {
+                'search-bg': "url('/src/assets/images/background.png')",
+            },
+        },
         colors: {
             'blue-light': '#8FB2F5',
             'gray-900': '#13131A',

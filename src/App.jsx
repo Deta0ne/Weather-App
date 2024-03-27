@@ -1,7 +1,8 @@
 import './App.css';
+import Search from './components/Search';
 
 function App() {
-    return <div className="text-text-xs font-nunito bg-gray-400">Weather App</div>;
+    return <Search />;
 }
 
 export default App;
