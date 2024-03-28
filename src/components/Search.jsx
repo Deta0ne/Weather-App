@@ -73,11 +73,12 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
     const handleOnSearchChange = (e) => {
         const searchTerm = e.target.value;
         setTerm(searchTerm);
+        setSuggestions([]);
         debouncedFetchCities(searchTerm);
     };
 
     return (
-        <div className="container w-96 h-[50rem] bg-search-bg bg-center grid justify-center content-start">
+        <div className="container w-96 h-[100vh] bg-search-bg bg-center grid justify-center content-start">
             <img src="../../src/assets/logo/logo.svg" alt="logo" className="justify-self-center pt-6" />
             <div className="py-[10rem]">
                 <div className="flex flex-col pb-4 items-center">
