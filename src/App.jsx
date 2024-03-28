@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { WEATHER_API_KEY, WEATHER_API_URL, UV_API_KEY, UV_API_URL } from './api';
 import { HomeComponent } from './components/HomeComponent';
+import { useGeolocated } from 'react-geolocated';
 
 function App() {
     const [currentWeather, setCurrentWeather] = useState(null);
@@ -33,12 +34,23 @@ function App() {
         }
     };
 
+    //GeoLocation
+    const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+        positionOptions: {
+            enableHighAccuracy: false,
+        },
+        userDecisionTimeout: 5000,
+    });
+
     const handleOnSearchClick = async (selectedCity) => {
+        console.log('Selected city:', selectedCity);
+        console.log('Coords:', coords);
         setIsSearching(true);
         try {
             const weatherResponse = await axios.get(`${WEATHER_API_URL}/weather`, {
                 params: {
-                    q: selectedCity.name,
+                    lat: selectedCity.latitude,
+                    lon: selectedCity.longitude,
                     appid: WEATHER_API_KEY,
                     units: 'metric',
                 },
@@ -47,7 +59,8 @@ function App() {
             console.log('Weather:', weatherResponse);
             const forecastResponse = await axios.get(`${WEATHER_API_URL}/forecast`, {
                 params: {
-                    q: selectedCity.name,
+                    lat: selectedCity.latitude,
+                    lon: selectedCity.longitude,
                     appid: WEATHER_API_KEY,
                     units: 'metric',
                 },

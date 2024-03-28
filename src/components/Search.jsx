@@ -45,14 +45,21 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
         try {
             const response = await axios({
                 method: 'GET',
-                url: `${GEO_API_URL}/cities?namePrefix=${searchTerm}&limit=5`,
+                url: `${GEO_API_URL}/cities?namePrefix=${searchTerm}`,
+                params: {
+                    istanceUnit: 'KM',
+                    types: 'CITY',
+                    minPopulation: '30000',
+                    limit: '3',
+                    sort: 'population,name',
+                },
                 headers: {
                     'X-RapidAPI-Key': 'd6bcaed461msh5cce96a5fd5a4aap114f42jsn2f112ee15ee8',
                     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
                 },
                 cancelToken: newCancelToken.token,
             });
-            setSuggestions(response.data.data.slice(0, 5));
+            setSuggestions(response.data.data);
         } catch (error) {
             if (axios.isCancel(error)) {
                 console.log('Request canceled', error.message);
@@ -113,14 +120,14 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
                                 />
                             </svg>
                         )}
-                        <ul className="text-gray-100  rounded-md  mt-2 bg-gray-500 divide-y divide-gray-900">
+                        <ul className="text-gray-100  rounded-md  mt-2 bg-gray-500 divide-y divide-gray-900 max-w-72">
                             {suggestions.map((city) => (
                                 <li
                                     key={`${city.id}-${city.name}`}
-                                    className="cursor-pointer hover:bg-gray-700 rounded-md p-3"
+                                    className="cursor-pointer hover:bg-gray-700  p-3"
                                     onClick={() => handleSelectCity(city)}
                                 >
-                                    {city.name}
+                                    {city.name}, {city.countryCode} - {city.country}
                                 </li>
                             ))}
                         </ul>
