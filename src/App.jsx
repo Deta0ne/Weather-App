@@ -28,7 +28,6 @@ function App() {
                 },
             });
             setCurrentUV(response.data.result);
-            console.log('UV Index:', response.data.result);
         } catch (error) {
             console.error('Error fetching UV Index:', error);
         }
@@ -63,13 +62,17 @@ function App() {
     };
 
     return (
-        <div className="flex">
+        <div className="flex justify-center bg-gray-800">
             <Search
                 handleOnSearchClick={handleOnSearchClick}
                 isSearching={isSearching}
                 setIsSearching={setIsSearching}
             />
-            <HomeComponent currentWeather={currentWeather} forecast={forecast} currentUV={currentUV} />
+            <HomeComponent
+                currentWeather={currentWeather}
+                forecast={forecast}
+                currentUV={currentUV ? currentUV : 'No data'}
+            />
         </div>
     );
 }
