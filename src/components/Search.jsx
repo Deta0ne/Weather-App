@@ -12,7 +12,7 @@ const debounce = (func, delay) => {
     };
 };
 
-const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
+const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched, setHasSearched }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setTerm] = useState('');
@@ -75,6 +75,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
         setSelectedCity(city);
         setSuggestions([]);
         setTerm(city.name);
+        setHasSearched(false);
     };
 
     const handleOnSearchChange = (e) => {
@@ -134,8 +135,9 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
                     </div>
 
                     <button
-                        className="w-72 h-12 bg-blue-light text-white font-nunito text-text-md mt-4 rounded-lg hover:bg-gray-600"
+                        className="disabled:cursor-not-allowed w-72 h-12 bg-blue-light text-black font-nunito text-text-md mt-4 rounded-lg hover:bg-gray-500 hover:text-white transition ease-in-out delay-100"
                         onClick={() => handleOnSearchClick(selectedCity)}
+                        disabled={isSearching}
                     >
                         Search
                     </button>

@@ -11,6 +11,7 @@ function App() {
     const [forecast, setForecast] = useState(null);
     const [isSearching, setIsSearching] = useState(false);
     const [currentUV, setCurrentUV] = useState(null);
+    const [hasSearched, setHasSearched] = useState(false);
 
     useEffect(() => {
         if (currentWeather) {
@@ -35,42 +36,48 @@ function App() {
     };
 
     //GeoLocation
-    const { coords, isGeolocationAvailable, isGeolocationEnabled } = useGeolocated({
+    const { coords } = useGeolocated({
         positionOptions: {
             enableHighAccuracy: false,
         },
         userDecisionTimeout: 5000,
     });
 
+    useEffect(() => {
+        if (coords) {
+            setIsSearching(true);
+            handleOnSearchClick({ latitude: coords.latitude, longitude: coords.longitude });
+        }
+    }, [coords]);
+
     const handleOnSearchClick = async (selectedCity) => {
-        console.log('Selected city:', selectedCity);
-        console.log('Coords:', coords);
         setIsSearching(true);
         try {
-            const weatherResponse = await axios.get(`${WEATHER_API_URL}/weather`, {
-                params: {
-                    lat: selectedCity.latitude,
-                    lon: selectedCity.longitude,
-                    appid: WEATHER_API_KEY,
-                    units: 'metric',
-                },
-            });
-            setCurrentWeather(weatherResponse);
-            console.log('Weather:', weatherResponse);
-            const forecastResponse = await axios.get(`${WEATHER_API_URL}/forecast`, {
-                params: {
-                    lat: selectedCity.latitude,
-                    lon: selectedCity.longitude,
-                    appid: WEATHER_API_KEY,
-                    units: 'metric',
-                },
-            });
-            setForecast(forecastResponse);
-            console.log('Forecast:', forecastResponse);
+            if (!hasSearched) {
+                const weatherResponse = await axios.get(`${WEATHER_API_URL}/weather`, {
+                    params: {
+                        lat: selectedCity.latitude,
+                        lon: selectedCity.longitude,
+                        appid: WEATHER_API_KEY,
+                        units: 'metric',
+                    },
+                });
+                setCurrentWeather(weatherResponse);
+                const forecastResponse = await axios.get(`${WEATHER_API_URL}/forecast`, {
+                    params: {
+                        lat: selectedCity.latitude,
+                        lon: selectedCity.longitude,
+                        appid: WEATHER_API_KEY,
+                        units: 'metric',
+                    },
+                });
+                setForecast(forecastResponse);
+            }
         } catch (error) {
             console.error('Error fetching weather:', error);
         } finally {
             setIsSearching(false);
+            setHasSearched(true);
         }
     };
 
@@ -80,12 +87,16 @@ function App() {
                 handleOnSearchClick={handleOnSearchClick}
                 isSearching={isSearching}
                 setIsSearching={setIsSearching}
+                hasSearched={hasSearched}
+                setHasSearched={setHasSearched}
             />
-            <HomeComponent
-                currentWeather={currentWeather}
-                forecast={forecast}
-                currentUV={currentUV ? currentUV : 'No data'}
-            />
+            {currentWeather && forecast && (
+                <HomeComponent
+                    currentWeather={currentWeather}
+                    forecast={forecast}
+                    currentUV={currentUV ? currentUV : 'No data'}
+                />
+            )}
         </div>
     );
 }
