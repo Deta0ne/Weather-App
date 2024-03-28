@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { GEO_API_URL } from '../api';
 import axios from 'axios';
-import { WEATHER_API_KEY, WEATHER_API_URL } from '../api';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -12,13 +12,10 @@ const debounce = (func, delay) => {
     };
 };
 
-const Search = () => {
+const Search = ({ handleOnSearchClick, isSearching, setIsSearching }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setTerm] = useState('');
-    const [currentWeather, setCurrentWeather] = useState(null);
-    const [forecast, setForecast] = useState(null);
-    const [isSearching, setIsSearching] = useState(false);
     const [cancelToken, setCancelToken] = useState(null);
 
     useEffect(() => {
@@ -48,14 +45,14 @@ const Search = () => {
         try {
             const response = await axios({
                 method: 'GET',
-                url: `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?namePrefix=${searchTerm}&limit=3`,
+                url: `${GEO_API_URL}/cities?namePrefix=${searchTerm}&limit=5`,
                 headers: {
                     'X-RapidAPI-Key': 'd6bcaed461msh5cce96a5fd5a4aap114f42jsn2f112ee15ee8',
                     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
                 },
                 cancelToken: newCancelToken.token,
             });
-            setSuggestions(response.data.data.slice(0, 3));
+            setSuggestions(response.data.data.slice(0, 5));
         } catch (error) {
             if (axios.isCancel(error)) {
                 console.log('Request canceled', error.message);
@@ -77,27 +74,6 @@ const Search = () => {
         const searchTerm = e.target.value;
         setTerm(searchTerm);
         debouncedFetchCities(searchTerm);
-    };
-
-    const handleOnSearchClick = async () => {
-        setIsSearching(true);
-        try {
-            const response = await axios({
-                method: 'GET',
-                url: `${WEATHER_API_URL}/weather?q=${selectedCity.name}&appid=${WEATHER_API_KEY}&units=metric`,
-            });
-            setCurrentWeather(response.data);
-
-            const forecastResponse = await axios({
-                method: 'GET',
-                url: `${WEATHER_API_URL}/forecast?q=${selectedCity.name}&appid=${WEATHER_API_KEY}&units=metric`,
-            });
-            setForecast(forecastResponse.data);
-        } catch (error) {
-            console.error('Error fetching weather:', error);
-        } finally {
-            setIsSearching(false);
-        }
     };
 
     return (
@@ -151,7 +127,7 @@ const Search = () => {
 
                     <button
                         className="w-72 h-12 bg-blue-light text-white font-nunito text-text-md mt-4 rounded-lg"
-                        onClick={handleOnSearchClick}
+                        onClick={() => handleOnSearchClick(selectedCity)}
                     >
                         Search
                     </button>

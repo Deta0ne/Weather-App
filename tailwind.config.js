@@ -5,6 +5,16 @@ export default {
         extend: {
             backgroundImage: {
                 'search-bg': "url('/src/assets/images/background.png')",
+                '01d': "url('/src/assets/images/01d.png')",
+                '01n': "url('/src/assets/images/01n.png')",
+                '02d': "url('/src/assets/images/02d.png')",
+                '02n': "url('/src/assets/images/02n.png')",
+                '03d': "url('/src/assets/images/01d.png')",
+                '03n': "url('/src/assets/images/01n.png')",
+                '09d': "url('/src/assets/images/01d.png')",
+                '09n': "url('/src/assets/images/01n.png')",
+                '011d': "url('/src/assets/images/01d.png')",
+                '011n': "url('/src/assets/images/01n.png')",
             },
         },
         colors: {
