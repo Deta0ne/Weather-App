@@ -4,7 +4,7 @@ export const HomeComponent = ({ currentWeather, forecast, currentUV }) => {
 
     {
         return currentWeather && forecast ? (
-            <div className="container w-[24rem]  bg-search-bg bg-center grid justify-center content-start gap-1">
+            <div className="container w-auto sm:w-96  bg-search-bg bg-center grid justify-center content-start gap-1">
                 <div className="w-[22rem] h-[21rem] bg-gray-800 mt-1 rounded-md">
                     <div
                         style={{

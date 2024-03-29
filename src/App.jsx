@@ -36,12 +36,14 @@ function App() {
             if (error.response.status === 400) {
                 setError('No UV data');
                 setCurrentUV({ uv: 'No UV data' });
-            } else if (error.response.status === 403) {
-                setError(error.response.data.error + ',UV Index Api');
+            } else if (error.response.data.error.length > 34 && error.response.status === 403) {
+                setError('Daily API quota exceeded, UV Index Api');
                 setCurrentUV({ uv: 'No UV data' });
-            } else if (error.response.status === 429) {
-                setError(error.response.data.error + ',UV Index Api');
+            } else if (error.response.data.error.length < 34 && error.response.status === 403) {
+                setError('User with API Key not found, UV Index Api');
                 setCurrentUV({ uv: 'No UV data' });
+            } else {
+                setError('An error occurred while searching for the UV index API.');
             }
         } finally {
             setIsSearching(false);
@@ -57,8 +59,8 @@ function App() {
     });
     useEffect(() => {
         if (coords) {
-            setHasSearched(false);
             setIsSearching(true);
+            setHasSearched(false);
             handleOnSearchClick({ latitude: coords.latitude, longitude: coords.longitude });
         }
     }, [coords]);
@@ -102,7 +104,7 @@ function App() {
         }
     };
     return (
-        <div className="sm:flex justify-center bg-gray-800">
+        <div className="sm:flex justify-center bg-gray-800 pb-2 sm:pb-0">
             <Search
                 handleOnSearchClick={handleOnSearchClick}
                 isSearching={isSearching}
