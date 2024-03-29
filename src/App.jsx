@@ -1,10 +1,12 @@
 import './App.css';
 import Search from './components/Search';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { WEATHER_API_KEY, WEATHER_API_URL, UV_API_KEY, UV_API_URL } from './api';
-import { HomeComponent } from './components/HomeComponent';
+import { WeatherCard } from './components//WeatherCard';
+import { WeatherDetails } from './components/WeatherDetails';
+import { WeatherNextDays } from './components/WeatherNextDays';
 import { useGeolocated } from 'react-geolocated';
+import { fetchCurrentWeather, fetchForecast } from './services/weatherService';
+import { fetchUVIndex } from './services/uvService';
 
 function App() {
     const [currentWeather, setCurrentWeather] = useState(null);
@@ -24,12 +26,7 @@ function App() {
         if (!currentWeather || !currentWeather.data.coord) return;
         try {
             const { lat, lon } = currentWeather.data.coord;
-            const response = await axios.get(`${UV_API_URL}/uv`, {
-                params: { lat, lng: lon },
-                headers: {
-                    'x-access-token': UV_API_KEY,
-                },
-            });
+            const response = await fetchUVIndex(lat, lon);
             setCurrentUV(response.data.result);
             response.status === 200 && setError(null);
         } catch (error) {
@@ -50,42 +47,13 @@ function App() {
         }
     };
 
-    //GeoLocation
-    const { coords } = useGeolocated({
-        positionOptions: {
-            enableHighAccuracy: false,
-        },
-        userDecisionTimeout: 5000,
-    });
-    useEffect(() => {
-        if (coords) {
-            setIsSearching(true);
-            setHasSearched(false);
-            handleOnSearchClick({ latitude: coords.latitude, longitude: coords.longitude });
-        }
-    }, [coords]);
-
     const handleOnSearchClick = async (selectedCity) => {
         setIsSearching(true);
         try {
             if (!hasSearched) {
-                const weatherResponse = await axios.get(`${WEATHER_API_URL}/weather`, {
-                    params: {
-                        lat: selectedCity.latitude,
-                        lon: selectedCity.longitude,
-                        appid: WEATHER_API_KEY,
-                        units: 'metric',
-                    },
-                });
+                const weatherResponse = await fetchCurrentWeather(selectedCity.latitude, selectedCity.longitude);
                 setCurrentWeather(weatherResponse);
-                const forecastResponse = await axios.get(`${WEATHER_API_URL}/forecast`, {
-                    params: {
-                        lat: selectedCity.latitude,
-                        lon: selectedCity.longitude,
-                        appid: WEATHER_API_KEY,
-                        units: 'metric',
-                    },
-                });
+                const forecastResponse = await fetchForecast(selectedCity.latitude, selectedCity.longitude);
                 setForecast(forecastResponse);
                 weatherResponse && setHasSearched(true);
             } else {
@@ -103,6 +71,21 @@ function App() {
             setIsSearching(false);
         }
     };
+
+    //GeoLocation
+    const { coords } = useGeolocated({
+        positionOptions: {
+            enableHighAccuracy: false,
+        },
+        userDecisionTimeout: 5000,
+    });
+    useEffect(() => {
+        if (coords) {
+            setIsSearching(true);
+            setHasSearched(false);
+            handleOnSearchClick({ latitude: coords.latitude, longitude: coords.longitude });
+        }
+    }, [coords]);
     return (
         <div className="sm:flex justify-center bg-gray-800 pb-2 sm:pb-0">
             <Search
@@ -115,11 +98,15 @@ function App() {
                 setError={setError}
             />
             {currentWeather && forecast && (
-                <HomeComponent
-                    currentWeather={currentWeather}
-                    forecast={forecast}
-                    currentUV={currentUV ? currentUV : 'No data'}
-                />
+                <div className="container w-auto sm:w-96  bg-search-bg bg-center grid justify-center content-start gap-1">
+                    <WeatherCard weatherData={currentWeather.data} />
+                    <WeatherDetails
+                        currentWeather={currentWeather}
+                        forecast={forecast}
+                        uvIndex={currentUV ? currentUV : 'No data'}
+                    />
+                    <WeatherNextDays forecastData={forecast.data} />
+                </div>
             )}
         </div>
     );

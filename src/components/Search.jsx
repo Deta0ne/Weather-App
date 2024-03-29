@@ -70,6 +70,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                 },
                 cancelToken: newCancelToken.token,
             });
+
             setSuggestions(response.data.data);
         } catch (error) {
             if (axios.isCancel(error)) {
