@@ -28,7 +28,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
             <hr className="text-gray-700 border-t-2 w-80 justify-self-center" />
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`/assets/İcons/wind.svg`} alt="Wind" className="w-6 h-6" />
+                    <img src={`/İcons/wind.svg`} alt="Wind" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">Wind speed</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
