@@ -12,6 +12,7 @@ function App() {
     const [isSearching, setIsSearching] = useState(false);
     const [currentUV, setCurrentUV] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (currentWeather) {
@@ -30,8 +31,19 @@ function App() {
                 },
             });
             setCurrentUV(response.data.result);
+            response.status === 200 && setError(null);
         } catch (error) {
-            console.error('Error fetching UV Index:', error);
+            if (error.response.status === 400) {
+                setError('No UV data');
+                setCurrentUV({ uv: 'No UV data' });
+            } else if (error.response.status === 403) {
+                setError('UV Index API key is invalid.');
+            } else if (error.response.status === 429) {
+                setError('Daily UV Index API quota exceeded.');
+                setCurrentUV({ uv: 'No UV data' });
+            }
+        } finally {
+            setIsSearching(false);
         }
     };
 
@@ -42,9 +54,9 @@ function App() {
         },
         userDecisionTimeout: 5000,
     });
-
     useEffect(() => {
         if (coords) {
+            setHasSearched(false);
             setIsSearching(true);
             handleOnSearchClick({ latitude: coords.latitude, longitude: coords.longitude });
         }
@@ -72,15 +84,22 @@ function App() {
                     },
                 });
                 setForecast(forecastResponse);
+                weatherResponse && setHasSearched(true);
+            } else {
+                alert('You have already searched this city. Please search for another city.');
             }
         } catch (error) {
-            console.error('Error fetching weather:', error);
+            if (error.response.status === 429) {
+                setError('Too many search requests. Please try again later.');
+            } else if (error.response.status === 401) {
+                setError('OpenWeather API key is invalid.');
+            } else {
+                setError('An error occurred while searching for the city.');
+            }
         } finally {
             setIsSearching(false);
-            setHasSearched(true);
         }
     };
-
     return (
         <div className="flex justify-center bg-gray-800">
             <Search
@@ -89,6 +108,8 @@ function App() {
                 setIsSearching={setIsSearching}
                 hasSearched={hasSearched}
                 setHasSearched={setHasSearched}
+                error={error}
+                setError={setError}
             />
             {currentWeather && forecast && (
                 <HomeComponent

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { GEO_API_URL } from '../api';
+import { GEO_API_URL, GEO_API_KEY } from '../api';
 import axios from 'axios';
 
 const debounce = (func, delay) => {
@@ -12,7 +12,7 @@ const debounce = (func, delay) => {
     };
 };
 
-const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched, setHasSearched }) => {
+const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched, setHasSearched, error, setError }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setTerm] = useState('');
@@ -54,7 +54,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                     sort: 'population,name',
                 },
                 headers: {
-                    'X-RapidAPI-Key': 'd6bcaed461msh5cce96a5fd5a4aap114f42jsn2f112ee15ee8',
+                    'X-RapidAPI-Key': GEO_API_KEY,
                     'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
                 },
                 cancelToken: newCancelToken.token,
@@ -62,9 +62,13 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
             setSuggestions(response.data.data);
         } catch (error) {
             if (axios.isCancel(error)) {
-                console.log('Request canceled', error.message);
+                setError('Search canceled.');
+            } else if (error.response.status === 403) {
+                setError('GeoDB API key is invalid');
+            } else if (error.response.status === 429) {
+                setError('You have exceeded the rate geoDB limit. Try again later.');
             } else {
-                console.error('Error fetching cities:', error);
+                setError('An error occurred while searching for cities.');
             }
         } finally {
             setIsSearching(false);
@@ -97,6 +101,14 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                         Choose a location to see the weather forecast
                     </p>
                 </div>
+                {error && (
+                    <div className=" pb-4 items-center max-w-72 text-gray-100 font-nunito text-text-sm">
+                        <span style={{ color: 'red' }} className="text-red-400">
+                            Error:{' '}
+                        </span>
+                        {error}
+                    </div>
+                )}
                 <div className="flex flex-col ">
                     <div className="relative">
                         <input
@@ -136,7 +148,13 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
 
                     <button
                         className="disabled:cursor-not-allowed w-72 h-12 bg-blue-light text-black font-nunito text-text-md mt-4 rounded-lg hover:bg-gray-500 hover:text-white transition ease-in-out delay-100"
-                        onClick={() => handleOnSearchClick(selectedCity)}
+                        onClick={() => {
+                            if (selectedCity) {
+                                handleOnSearchClick(selectedCity);
+                            } else {
+                                alert('Please select a city from the suggestions.');
+                            }
+                        }}
                         disabled={isSearching}
                     >
                         Search

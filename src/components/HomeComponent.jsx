@@ -10,7 +10,7 @@ export const HomeComponent = ({ currentWeather, forecast, currentUV }) => {
                         style={{
                             backgroundImage: `url('../../src/assets/images/${currentWeather.data.weather[0].icon}.png')`,
                         }}
-                        className={` bg-center m-2 w-[21rem] h-[19rem] rounded-md p-4 grid content-between`}
+                        className={` bg-center m-2 w-[21rem] h-[20rem] rounded-md p-4 grid content-between`}
                     >
                         <div>
                             <p className="font-nunito text-heading-sm text-white">
