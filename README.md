@@ -1,3 +1,7 @@
+<p align="center"> 
+ <img src="https://raw.githubusercontent.com/Deta0ne/Weather-App/65507d90c94cc926792c49978036bdc98662062a/src/assets/logo/logo.svg" width="318px" alt="Weather-App logo" />
+</p>
+
 # Weather-App
 
 Instant and 5-day weather application with React.
@@ -43,3 +47,17 @@ npm run dev
 ```
 CSS,HTML,Javascript, Vite, React, Tailwind, axios, OpenUV API, OpenWeather API, GeoDB API
 ```
+
+## 📖 How to use.
+
+#### When the app is launched, it asks for optional location information. If you accept, weather information for your current city will be displayed.
+
+![Location](https://github.com/Deta0ne/Weather-App/blob/main/location.png?raw=true)
+
+#### After entering the city you want in the search input, click on the suggestions and press the search button.
+
+![Search](https://github.com/Deta0ne/Weather-App/blob/main/search.png?raw=true)
+
+#### After the weather information arrives, it is shown as below.
+
+![App](https://github.com/Deta0ne/Weather-App/blob/main/app.png?raw=true)
