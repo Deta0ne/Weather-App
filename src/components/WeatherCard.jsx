@@ -12,7 +12,7 @@ export const WeatherCard = ({ weatherData }) => {
         <div className="w-[22rem] h-[21rem] bg-gray-800 mt-1 rounded-md">
             <div
                 style={{
-                    backgroundImage: `url('../../src/assets/images/${weatherData.weather[0].icon}.png')`,
+                    backgroundImage: `url('/images/${weatherData.weather[0].icon}.png')`,
                 }}
                 className="bg-center m-2 w-[21rem] h-[20rem] rounded-md p-4 grid content-between"
             >
@@ -36,7 +36,7 @@ export const WeatherCard = ({ weatherData }) => {
                     </div>
                     <div>
                         <img
-                            src={`../../src/assets/İcons/${weatherData.weather[0].icon}.svg`}
+                            src={`/İcons/${weatherData.weather[0].icon}.svg`}
                             alt={weatherData.weather[0].description}
                         />
                     </div>

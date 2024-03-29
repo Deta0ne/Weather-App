@@ -24,8 +24,8 @@ export const WeatherNextDays = ({ forecastData }) => {
                                         item.weather[0].icon.slice(0, 2) !== '13' &&
                                         item.weather[0].icon.slice(0, 2) !== '50' &&
                                         item.weather[0].icon.slice(0, 2) !== '04'
-                                            ? `../../src/assets/İcons/${item.weather[0].icon}.svg`
-                                            : `../../src/assets/İcons/02d.svg`
+                                            ? `/İcons/${item.weather[0].icon}.svg`
+                                            : `/İcons/02d.svg`
                                     }
                                     alt={item.weather[0].description}
                                     className=""

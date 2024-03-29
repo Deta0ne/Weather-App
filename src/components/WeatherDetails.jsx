@@ -10,7 +10,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
         <div className="grid w-[22rem] h-[20rem] bg-gray-800 mt-1 rounded-md">
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`../../src/assets/İcons/thermometer.svg`} alt="Thermometer" className="w-6 h-6" />
+                    <img src={`/İcons/thermometer.svg`} alt="Thermometer" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">Thermal sensation</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
@@ -20,7 +20,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
             <hr className="text-gray-700 border-t-2 w-72 justify-self-center" />
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`../../src/assets/İcons/rain.svg`} alt="Rain" className="w-6 h-6" />
+                    <img src={`/İcons/rain.svg`} alt="Rain" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">Probability of rain</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">{forecast.data.list[0].pop}%</p>
@@ -28,7 +28,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
             <hr className="text-gray-700 border-t-2 w-80 justify-self-center" />
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`../../src/assets/İcons/wind.svg`} alt="Wind" className="w-6 h-6" />
+                    <img src={`/assets/İcons/wind.svg`} alt="Wind" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">Wind speed</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
@@ -38,7 +38,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
             <hr className="text-gray-700 border-t-2 w-80 justify-self-center" />
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`../../src/assets/İcons/drop.svg`} alt="Humidity" className="w-6 h-6" />
+                    <img src={`/İcons/drop.svg`} alt="Humidity" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">Air humidity</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">{currentWeather.data.main.humidity}%</p>
@@ -46,7 +46,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
             <hr className="text-gray-700 border-t-2 w-80 justify-self-center" />
             <div className="flex justify-between p-4">
                 <div className="flex gap-2 items-center">
-                    <img src={`../../src/assets/İcons/sun.svg`} alt="UV Index" className="w-6 h-6" />
+                    <img src={`/İcons/sun.svg`} alt="UV Index" className="w-6 h-6" />
                     <p className="text-heading-xs text-gray-200 font-nunito">UV Index</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
