@@ -1,4 +1,12 @@
+import PropTypes from 'prop-types';
+
 export const HomeComponent = ({ currentWeather, forecast, currentUV }) => {
+    HomeComponent.propTypes = {
+        currentWeather: PropTypes.object,
+        forecast: PropTypes.object,
+        currentUV: PropTypes.object,
+    };
+
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date().toLocaleDateString('en-US', options);
 

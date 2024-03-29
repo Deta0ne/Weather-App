@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GEO_API_URL, GEO_API_KEY } from '../api';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -13,6 +14,16 @@ const debounce = (func, delay) => {
 };
 
 const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched, setHasSearched, error, setError }) => {
+    Search.propTypes = {
+        handleOnSearchClick: PropTypes.func.isRequired,
+        isSearching: PropTypes.bool.isRequired,
+        setIsSearching: PropTypes.func.isRequired,
+        hasSearched: PropTypes.bool.isRequired,
+        setHasSearched: PropTypes.func.isRequired,
+        error: PropTypes.string,
+        setError: PropTypes.func.isRequired,
+    };
+
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setTerm] = useState('');
