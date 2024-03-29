@@ -37,9 +37,10 @@ function App() {
                 setError('No UV data');
                 setCurrentUV({ uv: 'No UV data' });
             } else if (error.response.status === 403) {
-                setError('UV Index API key is invalid.');
+                setError(error.response.data.error + ',UV Index Api');
+                setCurrentUV({ uv: 'No UV data' });
             } else if (error.response.status === 429) {
-                setError('Daily UV Index API quota exceeded.');
+                setError(error.response.data.error + ',UV Index Api');
                 setCurrentUV({ uv: 'No UV data' });
             }
         } finally {
@@ -101,7 +102,7 @@ function App() {
         }
     };
     return (
-        <div className="flex justify-center bg-gray-800">
+        <div className="sm:flex justify-center bg-gray-800">
             <Search
                 handleOnSearchClick={handleOnSearchClick}
                 isSearching={isSearching}
