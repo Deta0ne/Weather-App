@@ -50,7 +50,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
                     <p className="text-heading-xs text-gray-200 font-nunito">UV Index</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
-                    {uvIndex !== null ? `${uvIndex.uv.toFixed(2)}` : 'No Data'}
+                    {uvIndex !== undefined ? `${uvIndex.uv.toFixed(2)}` : 'No Data'}
                 </p>
             </div>
         </div>
