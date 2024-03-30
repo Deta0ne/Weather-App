@@ -6,7 +6,6 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
         currentWeather: PropTypes.object,
         forecast: PropTypes.object,
     };
-    console.log(uvIndex.uv.toFixed(2));
     return (
         <div className="grid w-[22rem] h-[20rem] bg-gray-800 mt-1 rounded-md">
             <div className="flex justify-between p-4">
