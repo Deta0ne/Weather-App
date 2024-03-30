@@ -6,6 +6,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
         currentWeather: PropTypes.object,
         forecast: PropTypes.object,
     };
+    console.log(uvIndex.uv.toFixed(2));
     return (
         <div className="grid w-[22rem] h-[20rem] bg-gray-800 mt-1 rounded-md">
             <div className="flex justify-between p-4">
@@ -50,7 +51,7 @@ export const WeatherDetails = ({ currentWeather, forecast, uvIndex }) => {
                     <p className="text-heading-xs text-gray-200 font-nunito">UV Index</p>
                 </div>
                 <p className="text-heading-sm text-gray-100 font-nunito">
-                    {uvIndex === null ? `${uvIndex.uv.toFixed(2)}` : 'No Data'}
+                    {uvIndex !== null ? `${uvIndex.uv.toFixed(2)}` : 'No Data'}
                 </p>
             </div>
         </div>
