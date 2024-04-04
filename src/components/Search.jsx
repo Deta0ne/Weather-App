@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { GEO_API_URL, GEO_API_KEY } from '../api';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const debounce = (func, delay) => {
     let timeoutId;
@@ -13,7 +14,17 @@ const debounce = (func, delay) => {
     };
 };
 
-const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched, setHasSearched, error, setError }) => {
+const Search = ({
+    handleOnSearchClick,
+    isSearching,
+    setIsSearching,
+    hasSearched,
+    setHasSearched,
+    error,
+    setError,
+    setLang,
+    lang,
+}) => {
     Search.propTypes = {
         handleOnSearchClick: PropTypes.func.isRequired,
         isSearching: PropTypes.bool.isRequired,
@@ -22,17 +33,24 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
         setHasSearched: PropTypes.func.isRequired,
         error: PropTypes.string,
         setError: PropTypes.func.isRequired,
+        setLang: PropTypes.func.isRequired,
+        lang: PropTypes.string.isRequired,
     };
 
     const [suggestions, setSuggestions] = useState([]);
     const [selectedCity, setSelectedCity] = useState(null);
     const [term, setTerm] = useState('');
     const [cancelToken, setCancelToken] = useState(null);
+    const { t, i18n } = useTranslation();
+    const changeLanguage = (lng) => {
+        setLang(lng);
+        i18n.changeLanguage(lng);
+    };
 
     useEffect(() => {
         return () => {
             if (cancelToken) {
-                cancelToken.cancel('Operation canceled by the user.');
+                cancelToken.cancel(t('fetchCityError1'));
             }
         };
     }, [cancelToken]);
@@ -48,7 +66,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
         setIsSearching(true);
         setTerm(searchTerm);
         if (cancelToken) {
-            cancelToken.cancel('Operation canceled by the user.');
+            cancelToken.cancel(t('fetchCityError1'));
         }
         const newCancelToken = axios.CancelToken.source();
         setCancelToken(newCancelToken);
@@ -74,13 +92,13 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
             setSuggestions(response.data.data);
         } catch (error) {
             if (axios.isCancel(error)) {
-                setError('Search canceled.');
+                setError(t('fetchCityError2'));
             } else if (error.response.status === 403) {
-                setError('GeoDB API key is invalid');
+                setError(t('fetchCityError3'));
             } else if (error.response.status === 429) {
-                setError('You have exceeded the rate geoDB limit. Try again later.');
+                setError(t('fetchCityError4'));
             } else {
-                setError('An error occurred while searching for cities.');
+                setError(t('fetchCityError5'));
             }
         } finally {
             setIsSearching(false);
@@ -104,19 +122,33 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
     return (
         <div className="container w-auto sm:w-96 h-[100vh] bg-search-bg bg-center grid justify-center content-start">
             <img src="/logo/logo.svg" alt="logo" className="justify-self-center pt-6" />
+            <div className="flex justify-center gap-2 pt-2 pr-2">
+                <button
+                    disabled={lang === 'en'}
+                    className="text-gray-200 font-nunito text-text-sm  disabled:opacity-50 "
+                    onClick={() => changeLanguage('en')}
+                >
+                    EN
+                </button>
+                <button
+                    disabled={lang === 'tr'}
+                    className="text-gray-200 font-nunito text-text-sm  disabled:opacity-50"
+                    onClick={() => changeLanguage('tr')}
+                >
+                    TR
+                </button>
+            </div>
             <div className="py-[15rem]">
                 <div className="flex flex-col pb-4 items-center">
                     <p className="text-heading-md font-nunito text-white ">
-                        Welcome to <span className="text-blue-light">TypeWeather</span>
+                        {t('welcome')} <span className="text-blue-light">TypeWeather</span>
                     </p>
-                    <p className="font-nunito text-text-sm text-gray-200">
-                        Choose a location to see the weather forecast
-                    </p>
+                    <p className="font-nunito text-text-sm text-gray-200">{t('descriptionSearch')}</p>
                 </div>
                 {error && (
                     <div className=" pb-4 items-center max-w-72 text-gray-100 font-nunito text-text-sm">
                         <span style={{ color: 'red' }} className="text-red-400">
-                            Error:{' '}
+                            {t('error')}:
                         </span>
                         {error}
                     </div>
@@ -125,7 +157,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                     <div className="relative">
                         <input
                             type="text"
-                            placeholder="Search location"
+                            placeholder={t('searchPlaceholder')}
                             className="w-72 h-12 rounded-lg text-gray-400 bg-gray-800 pl-4 focus:outline-none"
                             value={term}
                             onChange={handleOnSearchChange}
@@ -169,7 +201,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                         }}
                         disabled={isSearching}
                     >
-                        Search
+                        {t('search')}
                     </button>
 
                     {hasSearched && (
@@ -179,7 +211,7 @@ const Search = ({ handleOnSearchClick, isSearching, setIsSearching, hasSearched,
                             disabled={isSearching}
                         >
                             <img src="/İcons/down.svg" alt="" className="w-6 h-12 " />
-                            Go to Weather
+                            {t('goToWeather')}
                         </button>
                     )}
                 </div>

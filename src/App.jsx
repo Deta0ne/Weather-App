@@ -7,6 +7,7 @@ import { WeatherNextDays } from './components/WeatherNextDays';
 import { useGeolocated } from 'react-geolocated';
 import { fetchCurrentWeather, fetchForecast } from './services/weatherService';
 import { fetchUVIndex } from './services/uvService';
+import { useTranslation } from 'react-i18next';
 
 function App() {
     const [currentWeather, setCurrentWeather] = useState(null);
@@ -15,6 +16,8 @@ function App() {
     const [currentUV, setCurrentUV] = useState(null);
     const [hasSearched, setHasSearched] = useState(false);
     const [error, setError] = useState(null);
+    const [lang, setLang] = useState('en');
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (currentWeather) {
@@ -31,16 +34,16 @@ function App() {
             response.status === 200 && setError(null);
         } catch (error) {
             if (error.response.status === 400) {
-                setError('No UV data');
-                setCurrentUV({ uv: 'No UV data' });
+                setError(t('uvError1'));
+                setCurrentUV({ uv: t('uvError1') });
             } else if (error.response.data.error.length > 34 && error.response.status === 403) {
-                setError('Daily API quota exceeded, UV Index Api');
-                setCurrentUV({ uv: 'No UV data' });
+                setError(t('uvError2'));
+                setCurrentUV({ uv: t('uvError1') });
             } else if (error.response.data.error.length < 34 && error.response.status === 403) {
-                setError('User with API Key not found, UV Index Api');
-                setCurrentUV({ uv: 'No UV data' });
+                setError(t('uvError3'));
+                setCurrentUV({ uv: t('uvError1') });
             } else {
-                setError('An error occurred while searching for the UV index API.');
+                setError(t('uvError4'));
             }
         } finally {
             setIsSearching(false);
@@ -57,15 +60,15 @@ function App() {
                 setForecast(forecastResponse);
                 weatherResponse && setHasSearched(true);
             } else {
-                alert('You have already searched this city. Please search for another city.');
+                alert(t('searchError1'));
             }
         } catch (error) {
             if (error.response.status === 429) {
-                setError('Too many search requests. Please try again later.');
+                setError(t('searchError2'));
             } else if (error.response.status === 401) {
-                setError('OpenWeather API key is invalid.');
+                setError(t('searchError3'));
             } else {
-                setError('An error occurred while searching for the city.');
+                setError(t('searchError4'));
             }
         } finally {
             setIsSearching(false);
@@ -96,16 +99,18 @@ function App() {
                 setHasSearched={setHasSearched}
                 error={error}
                 setError={setError}
+                setLang={setLang}
+                lang={lang}
             />
             {currentWeather && forecast && (
                 <div className="container w-auto sm:w-96  bg-search-bg bg-center grid justify-center content-start gap-1">
-                    <WeatherCard weatherData={currentWeather.data} />
+                    <WeatherCard weatherData={currentWeather.data} lang={lang} />
                     <WeatherDetails
                         currentWeather={currentWeather}
                         forecast={forecast}
-                        uvIndex={currentUV ? currentUV : 'No data'}
+                        uvIndex={currentUV ? currentUV : t('uvError1')}
                     />
-                    <WeatherNextDays forecastData={forecast.data} />
+                    <WeatherNextDays forecastData={forecast.data} lang={lang} />
                 </div>
             )}
         </div>

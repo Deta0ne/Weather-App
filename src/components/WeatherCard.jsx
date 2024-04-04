@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
-export const WeatherCard = ({ weatherData }) => {
+export const WeatherCard = ({ weatherData, lang }) => {
     WeatherCard.propTypes = {
         weatherData: PropTypes.object,
+        lang: PropTypes.string,
     };
 
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    const today = new Date().toLocaleDateString('en-US', options);
+    const today = new Date().toLocaleDateString(lang, options);
+
+    const { t } = useTranslation();
 
     return (
         <div className="w-[22rem] h-[21rem] bg-gray-800 mt-1 rounded-md">
@@ -30,8 +34,7 @@ export const WeatherCard = ({ weatherData }) => {
                             {Math.round(weatherData.main.temp_max)}°c
                         </p>
                         <p className="font-nunito text-text-sm text-white">
-                            {weatherData.weather[0].description.charAt(0).toUpperCase() +
-                                weatherData.weather[0].description.slice(1)}
+                            {t(`${weatherData.weather[0].description}`)}
                         </p>
                     </div>
                     <div>

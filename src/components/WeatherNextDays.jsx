@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 
-export const WeatherNextDays = ({ forecastData }) => {
+export const WeatherNextDays = ({ forecastData, lang }) => {
     WeatherNextDays.propTypes = {
         forecastData: PropTypes.object,
+        lang: PropTypes.string,
     };
     return (
         <div className="w-[22rem] h-[12rem] bg-gray-800 mt-1 rounded-md p-4">
@@ -13,7 +14,7 @@ export const WeatherNextDays = ({ forecastData }) => {
                             <div key={index} className="grid content-between justify-items-center">
                                 <p className="text-gray-200 font-nunito text-heading-xs">
                                     {new Date(item.dt_txt)
-                                        .toLocaleTimeString('en-US', {
+                                        .toLocaleTimeString(lang, {
                                             weekday: 'long',
                                             minute: 'numeric',
                                         })
