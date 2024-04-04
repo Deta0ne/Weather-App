@@ -45,7 +45,7 @@ npm run dev
 ## 💻 With which technologies it was made.
 
 ```
-CSS,HTML,Javascript, Vite, React, Tailwind, axios, OpenUV API, OpenWeather API, GeoDB API
+CSS,HTML,Javascript, Vite, React, Tailwind, axios, OpenUV API, OpenWeather API, GeoDB API, i18n
 ```
 
 ## 📖 How to use.
