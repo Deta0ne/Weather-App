@@ -153,8 +153,8 @@ const Search = ({
                         {error}
                     </div>
                 )}
-                <div className="flex flex-col ">
-                    <div className="relative">
+                <div className="flex flex-col items-center">
+                    <div>
                         <input
                             type="text"
                             placeholder={t('searchPlaceholder')}
